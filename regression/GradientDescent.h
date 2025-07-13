@@ -5,14 +5,14 @@
 
 class GradientDescent : public Optimizer {
     private:
-        long double learning_rate;
+        double learning_rate;
     public:
-        GradientDescent(long double lr = 0.01) : learning_rate(lr) {}
-        void setLearningRate(long double);
+        GradientDescent(double lr = 0.01) : learning_rate(lr) {}
+        void setLearningRate(double);
 
     void optimize(LinearRegression &model,
-                  const std::vector<std::vector<long double>> &X,
-                  const std::vector<long double> &Y,
+                  const std::vector<std::vector<double>> &X,
+                  const std::vector<double> &Y,
                   int epochs) override;
 };
 

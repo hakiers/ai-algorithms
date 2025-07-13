@@ -3,43 +3,55 @@
 #include "LinearRegression.h"
 #include "GradientDescent.h"
 #include "../utils/Loss.h"
+#include "../utils/CSVReader.h"
 
-void generateData(std::vector<std::vector<long double>>& X, std::vector<long double>& Y, int n) {
-    std::srand(0);
-    X.clear();
-    Y.clear();
+void standardize(std::vector<std::vector<double>>& X) {
+    if (X.empty()) return;
 
-    for (int i = 0; i < n; i++) {
-        long double x1 = (std::rand() % 100) / 10.0;  // 0.0 - 9.9
-        long double x2 = (std::rand() % 100) / 10.0;
-        long double x3 = (std::rand() % 100) / 10.0;
-        long double x4 = (std::rand() % 100) / 10.0;
-		long double x5 = (std::rand() % 100) / 10.0;
-		long double x6 = (std::rand() % 100) / 10.0;
+    int m = X.size();
+    int n = X[0].size();
 
-        long double noise = ((std::rand() % 100) / 100.0) - 0.5;  // -0.5 - 0.5
+    for (int j = 0; j < n; j++) {
+        // Compute mean for feature j
+        double sum = 0.0;
+        for (int i = 0; i < m; i++) {
+            sum += X[i][j];
+        }
+        double mean = sum / m;
 
-        long double y = 1 * x1 + 2 * x2 + 3 * x3 + 4 * x4 + 5 * x5 + 6 * x6 + 2137 + noise;
+        // Compute standard deviation for feature j
+        double sq_sum = 0.0;
+        for (int i = 0; i < m; i++) {
+            sq_sum += (X[i][j] - mean) * (X[i][j] - mean);
+        }
+        double stddev = std::sqrt(sq_sum / m);
 
-        X.push_back({x1, x2, x3, x4, x5, x6});
-        Y.push_back(y);
+        // Divided by 0
+        if (stddev == 0.0) stddev = 1.0;
+
+        // Standarize each feature of value j
+        for (int i = 0; i < m; i++) {
+            X[i][j] = (X[i][j] - mean) / stddev;
+        }
     }
 }
 
 int main() {
-    std::vector<std::vector<long double>> X;
-    std::vector<long double> Y;
+    std::vector<std::vector<double>> X;
+    std::vector<double> Y;
 
-    generateData(X, Y, 1000); // 1000 próbek
+	CSVReader reader("../data/air_quality.csv");
+	reader.readData(X, Y);
 
+    standardize(X);
     LinearRegression model;
-    GradientDescent optimizer(0.001);
+    GradientDescent optimizer(0.01);
 
-    model.fit(X, Y, optimizer, 100000);
+    model.fit(X, Y, optimizer, 1000);
 
     auto predictions = model.predict(X);
 
-    long double loss = mseLoss(predictions, Y);
+    double loss = mseLoss(predictions, Y);
     std::cout << "Final MSE Loss: " << loss << std::endl;
 
     auto w = model.getWeights();

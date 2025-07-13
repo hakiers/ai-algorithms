@@ -7,29 +7,28 @@ class Optimizer;
 
 class LinearRegression {
     friend class Optimizer;
-    friend class GradientDescent;
     private:
-        std::vector<long double> weights;
-        long double bias;
+        std::vector<double> weights;
+        double bias;
 
         bool is_trained;
     public:
         LinearRegression() : bias(0), is_trained(false) {}
         ~LinearRegression() = default;
 
-        long double predict(const std::vector<long double> &) const;
-        std::vector<long double> predict(const std::vector<std::vector<long double>> &) const;
+        double predict(const std::vector<double> &) const;
+        std::vector<double> predict(const std::vector<std::vector<double>> &) const;
 
-        void fit(const std::vector<std::vector<long double>> &, const std::vector<long double> &,
+        void fit(const std::vector<std::vector<double>> &, const std::vector<double> &,
                  Optimizer &, int);
 
-        std::vector<long double> getWeights() const;
-        LinearRegression setWeights(const std::vector<long double> &);
+        std::vector<double> getWeights() const;
+        LinearRegression& setWeights(const std::vector<double> &);
 
-        long double getBias() const;
-        LinearRegression setBias(long double);
+        double getBias() const;
+        LinearRegression& setBias(double);
 
-        LinearRegression reset();
+        LinearRegression& reset();
 };
 
 

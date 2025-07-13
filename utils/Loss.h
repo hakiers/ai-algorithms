@@ -2,8 +2,8 @@
 #define LOSS_H
 #include <vector>
 
-long double mseLoss(const std::vector<long double> &, const std::vector<long double> &);
+double mseLoss(const std::vector<double> &, const std::vector<double> &);
 
-long double maeLoss(const std::vector<long double> &, const std::vector<long double> &);
+double maeLoss(const std::vector<double> &, const std::vector<double> &);
 
 #endif //LOSS_H

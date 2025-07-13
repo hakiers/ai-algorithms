@@ -1,12 +1,17 @@
 #ifndef CSVREADER_H
 #define CSVREADER_H
 
-
+#include <string>
+#include <vector>
 
 class CSVReader {
+private:
+    std::string filename;
+    char delimiter;
 
+public:
+    CSVReader(const std::string &filename, char delimiter = ',');
+    void readData(std::vector<std::vector<double>> &features, std::vector<double> &outputs);
 };
 
-
-
-#endif //CSVREADER_H
+#endif
