@@ -1,5 +1,6 @@
 #include <vector>
 #include <iostream>
+#include <math.h>
 #include "model/LinearRegression.h"
 #include "optimizer/GradientDescent.h"
 #include "utils/Loss.h"
