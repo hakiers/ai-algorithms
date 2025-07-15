@@ -1,5 +1,5 @@
-#include "LinearRegression.h"
-#include "Optimizer.h"
+#include "model/LinearRegression.h"
+#include "optimizer/Optimizer.h"
 #include <stdexcept>
 
 double LinearRegression::predict(const std::vector<double> &X) const{
@@ -27,6 +27,7 @@ void LinearRegression::fit(const std::vector<std::vector<double>> &X, const std:
                         Optimizer &optimizer, int epochs)
 {
     if(X.size() != Y.size()) throw std::runtime_error("LinearRegression::fit: X.size() != Y.size()");
+    if(X.size() == 0) throw std::runtime_error("LinearRegression::fit: X.size() == 0");
 
     weights.resize(X[0].size(), 0.0);
     bias = 0.0;
@@ -52,6 +53,34 @@ double LinearRegression::getBias() const{
 LinearRegression& LinearRegression::setBias(double bias){
     this->bias = bias;
     return *this;
+}
+
+double LinearRegression::score(const std::vector<std::vector<double>> &X, const std::vector<double> &Y) const{
+    if(X.size() != Y.size()) throw std::runtime_error("LinearRegression::score: X.size() != Y.size()");
+    if(X.size() == 0) throw std::runtime_error("LinearRegression::score: X.size() == 0");
+
+    auto predictions = predict(X);
+
+    double mean_y = 0.0;
+
+    for(auto &y : Y)
+        mean_y += y;
+
+    mean_y /= Y.size();
+
+
+    double ss_res = 0.0;
+    double ss_tot = 0.0;
+
+    for(size_t i = 0; i < predictions.size(); i++){
+        double res = Y[i] - predictions[i];
+        ss_res += res * res;
+
+        double tot = Y[i] - mean_y;
+        ss_tot += tot * tot;
+    }
+
+    return 1 - ss_res / ss_tot;
 }
 
 LinearRegression& LinearRegression::reset(){

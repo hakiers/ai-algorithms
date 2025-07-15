@@ -1,0 +1,39 @@
+# Build
+/build/
+
+# Temp
+*.swp
+*.swo
+*.tmp
+*.log
+
+# Sys file
+.DS_Store
+Thumbs.db
+
+# Binary files
+*.exe
+*.out
+*.app
+
+# Compilation file
+*.o
+*.obj
+*.so
+*.dylib
+*.dll
+*.a
+*.lib
+
+# Cmake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# IDE configuration
+.vscode/
+.idea/
+*.code-workspace
+
+

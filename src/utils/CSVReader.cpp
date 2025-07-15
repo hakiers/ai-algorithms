@@ -1,10 +1,7 @@
-#include "CSVReader.h"
+#include "utils/CSVReader.h"
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
-
-CSVReader::CSVReader(const std::string &filename, char delimiter)
-    : filename(filename), delimiter(delimiter) {}
 
 void CSVReader::readData(std::vector<std::vector<double>> &features, std::vector<double> &outputs) {
     std::ifstream file(filename);

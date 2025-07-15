@@ -1,9 +1,9 @@
 #include <vector>
 #include <iostream>
-#include "LinearRegression.h"
-#include "GradientDescent.h"
-#include "../utils/Loss.h"
-#include "../utils/CSVReader.h"
+#include "model/LinearRegression.h"
+#include "optimizer/GradientDescent.h"
+#include "utils/Loss.h"
+#include "utils/CSVReader.h"
 
 void standardize(std::vector<std::vector<double>>& X) {
     if (X.empty()) return;
@@ -40,7 +40,7 @@ int main() {
     std::vector<std::vector<double>> X;
     std::vector<double> Y;
 
-	CSVReader reader("../data/air_quality.csv");
+	CSVReader reader("data/air_quality.csv");
 	reader.readData(X, Y);
 
     standardize(X);
@@ -59,5 +59,6 @@ int main() {
     for (auto weight : w) std::cout << weight << " ";
     std::cout << "\nBias: " << model.getBias() << std::endl;
 
+    std::cout << "Model score: " << model.score(X, Y) << std::endl;
     return 0;
 }

@@ -6,7 +6,6 @@
 class Optimizer;
 
 class LinearRegression {
-    friend class Optimizer;
     private:
         std::vector<double> weights;
         double bias;
@@ -27,6 +26,8 @@ class LinearRegression {
 
         double getBias() const;
         LinearRegression& setBias(double);
+
+        double score(const std::vector<std::vector<double>> &, const std::vector<double> &) const;
 
         LinearRegression& reset();
 };

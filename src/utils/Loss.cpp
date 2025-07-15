@@ -1,4 +1,4 @@
-#include "Loss.h"
+#include "utils/Loss.h"
 #include <stdexcept>
 #include <math.h>
 

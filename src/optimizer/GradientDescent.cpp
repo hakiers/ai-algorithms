@@ -1,5 +1,5 @@
-#include "GradientDescent.h"
-#include "LinearRegression.h"
+#include "optimizer/GradientDescent.h"
+#include "model/LinearRegression.h"
 #include <vector>
 #include <stdexcept>
 
@@ -14,6 +14,10 @@ void GradientDescent::setLearningRate(double learning_rate){
     this->learning_rate = learning_rate;
 }
 
+void GradientDescent::setBatchSize(int batch_size){
+    this->batch_size = batch_size;
+}
+
 void GradientDescent::optimize(LinearRegression& model,
                                const std::vector<std::vector<double>>& X,
                                const std::vector<double>& y,
@@ -22,13 +26,13 @@ void GradientDescent::optimize(LinearRegression& model,
     int m = X.size();
     int n = X[0].size();
 
-    for(int epoch = 0; epoch < epochs; epoch++){
+    for(size_t epoch = 0; epoch < epochs; epoch++){
         std::vector<double> error(m);
         std::vector<double> newWeights = model.getWeights();
         for(int i = 0; i < m; i++)
             error[i] = f(model.getWeights(), model.getBias(), X[i]) - y[i];
 
-        for(int i = 0; i < n; i++){
+        for(size_t i = 0; i < n; i++){
             double gradient = 0.0;
             for(int j = 0; j < m; j++)
                 gradient += error[j] * 2 * X[j][i];
@@ -38,7 +42,7 @@ void GradientDescent::optimize(LinearRegression& model,
 
         double gradient = 0.0;
         double newBias = model.getBias();
-        for(int i = 0; i < m; i++)
+        for(size_t i = 0; i < m; i++)
             gradient += error[i] * 2;
         gradient /= m;
         newBias -= gradient * learning_rate;
