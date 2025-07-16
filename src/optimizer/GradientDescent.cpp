@@ -2,6 +2,7 @@
 #include "model/LinearRegression.h"
 #include <vector>
 #include <stdexcept>
+#include <algorithm>
 
 double f(const std::vector<double> &weights, const double &bias, const std::vector<double> &x){
     double sum = bias;
@@ -27,27 +28,32 @@ void GradientDescent::optimize(LinearRegression& model,
     int n = X[0].size();
 
     for(size_t epoch = 0; epoch < epochs; epoch++){
-        std::vector<double> error(m);
-        std::vector<double> newWeights = model.getWeights();
-        for(int i = 0; i < m; i++)
-            error[i] = f(model.getWeights(), model.getBias(), X[i]) - y[i];
+        for(int batch_start = 0; batch_start < m; batch_start += batch_size){
+            int batch_end = std::min(batch_start + batch_size, m);
+            int current_batch_size = batch_end - batch_start;
 
-        for(size_t i = 0; i < n; i++){
+            std::vector<double> error(current_batch_size);
+            std::vector<double> newWeights = model.getWeights();
+            for(size_t i = batch_start; i < batch_end; i++)
+                error[i-batch_start] = f(model.getWeights(), model.getBias(), X[i]) - y[i];
+
+            for(size_t i = 0; i < n; i++){
+                double gradient = 0.0;
+                for(int j = 0; j < current_batch_size; j++)
+                    gradient += error[j] * 2 * X[j][i];
+                gradient /= current_batch_size;
+                newWeights[i] -= gradient * learning_rate;
+            }
+
             double gradient = 0.0;
-            for(int j = 0; j < m; j++)
-                gradient += error[j] * 2 * X[j][i];
-            gradient /= m;
-            newWeights[i] -= gradient * learning_rate;
+            double newBias = model.getBias();
+            for(size_t i = 0; i < current_batch_size; i++)
+                gradient += error[i] * 2;
+            gradient /= current_batch_size;
+            newBias -= gradient * learning_rate;
+
+            model.setWeights(newWeights);
+            model.setBias(newBias);
         }
-
-        double gradient = 0.0;
-        double newBias = model.getBias();
-        for(size_t i = 0; i < m; i++)
-            gradient += error[i] * 2;
-        gradient /= m;
-        newBias -= gradient * learning_rate;
-
-        model.setWeights(newWeights);
-        model.setBias(newBias);
     }
 }

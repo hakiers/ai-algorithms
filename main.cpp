@@ -12,17 +12,17 @@ void standardize(std::vector<std::vector<double>>& X) {
     int m = X.size();
     int n = X[0].size();
 
-    for (int j = 0; j < n; j++) {
+    for (size_t j = 0; j < n; j++) {
         // Compute mean for feature j
         double sum = 0.0;
-        for (int i = 0; i < m; i++) {
+        for (size_t i = 0; i < m; i++) {
             sum += X[i][j];
         }
         double mean = sum / m;
 
         // Compute standard deviation for feature j
         double sq_sum = 0.0;
-        for (int i = 0; i < m; i++) {
+        for (size_t i = 0; i < m; i++) {
             sq_sum += (X[i][j] - mean) * (X[i][j] - mean);
         }
         double stddev = std::sqrt(sq_sum / m);
@@ -31,7 +31,7 @@ void standardize(std::vector<std::vector<double>>& X) {
         if (stddev == 0.0) stddev = 1.0;
 
         // Standarize each feature of value j
-        for (int i = 0; i < m; i++) {
+        for (size_t i = 0; i < m; i++) {
             X[i][j] = (X[i][j] - mean) / stddev;
         }
     }
@@ -46,9 +46,9 @@ int main() {
 
     standardize(X);
     LinearRegression model;
-    GradientDescent optimizer(0.01);
+    GradientDescent optimizer(0.01, 10000);
 
-    model.fit(X, Y, optimizer, 1000);
+    model.fit(X, Y, optimizer, 10000);
 
     auto predictions = model.predict(X);
 
